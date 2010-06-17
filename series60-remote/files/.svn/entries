@@ -1,0 +1,35 @@
+10
+
+dir
+0
+https://overlays.gentoo.org/svn/proj/sunrise/sunrise/app-mobilephone/series60-remote/files
+https://overlays.gentoo.org/svn/proj/sunrise
+add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12608f7e-a915-0410-b2f3-ce240db1b126
+
+series60-remote-0.3.93-menufix.patch
+file
+
+
+
+add
+
