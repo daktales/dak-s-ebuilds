@@ -1,0 +1,21 @@
+Index: aaa/directory.py
+===================================================================
+--- aaa.orig/directory.py
++++ aaa/directory.py
+@@ -103,13 +103,13 @@ class Directory:
+                     self.dir_path, dir_bind_path)
+ 
+         try:
+-            subprocess.check_call(["unionfs-fuse", self.available_branches, \
++            subprocess.check_call(["unionfs", self.available_branches, \
+                 self.dir_path, "-o", "nonempty"])
+         except subprocess.CalledProcessError, error:
+-            return _("Error: unionfs-fuse exited with error code %s") \
++            return _("Error: unionfs exited with error code %s") \
+                 % str(error.returncode)
+         except OSError:
+-            return _("Error: unable to run unionfs-fuse")
++            return _("Error: unable to run unionfs")
+ 
+     def add_dir(self, dir_path):
+         if not os.path.isdir(dir_path):

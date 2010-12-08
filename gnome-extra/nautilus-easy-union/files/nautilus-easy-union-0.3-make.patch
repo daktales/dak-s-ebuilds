@@ -1,0 +1,51 @@
+Index: aaa/Makefile
+===================================================================
+--- aaa.orig/Makefile
++++ aaa/Makefile
+@@ -4,8 +4,8 @@ VERSION = 0.3
+ 
+ SHARE_DIR = /usr/share
+ LOCALE_DIR = $(SHARE_DIR)/locale
+-DOC_DIR = $(SHARE_DIR)/doc
+-NAUTILUS_PYEXT_DIR = /usr/lib/nautilus/extensions-2.0/python
++DOC_DIR = $(SHARE_DIR)/doc/easy-union
++NAUTILUS_PYEXT_DIR = $(shell pkg-config --variable=extensiondir libnautilus-extension)/python
+ XDG_AUTOSTART_DIR = /etc/xdg/autostart
+ 
+ MAIN = property_page.py \
+@@ -20,27 +20,25 @@ AUTOSTART = easy-union.desktop
+ DOC = README
+ 
+ install:
+-	mkdir -p $(SHARE_DIR)/easy-union
++	mkdir -p $(DESTDIR)$(SHARE_DIR)/easy-union $(DESTDIR)$(NAUTILUS_PYEXT_DIR) $(DESTDIR)$(XDG_AUTOSTART_DIR) $(DESTDIR)$(DOC_DIR)
+ 	for file in $(MAIN); do \
+-		sed -e "s#@SHARE_DIR@#$(SHARE_DIR)#g" $$file | sed -e "s#@VERSION@#$(VERSION)#g" > $(SHARE_DIR)/easy-union/$$file; \
+-		chmod 0755 $(SHARE_DIR)/easy-union/$$file; \
++		sed -e "s#@SHARE_DIR@#$(SHARE_DIR)#g" $$file | sed -e "s#@VERSION@#$(VERSION)#g" > $(DESTDIR)$(SHARE_DIR)/easy-union/$$file; \
++		chmod 0755 $(DESTDIR)$(SHARE_DIR)/easy-union/$$file; \
+ 	done
+ 	for file in $(NAUTILUS_EXT); do \
+-		ln -sf $(SHARE_DIR)/easy-union/$$file $(NAUTILUS_PYEXT_DIR); \
++		ln -sf $(DESTDIR)$(SHARE_DIR)/easy-union/$$file $(DESTDIR)$(NAUTILUS_PYEXT_DIR); \
+ 	done
+ 	for file in $(AUTOSTART); do \
+-		sed -e "s#@SHARE_DIR@#$(SHARE_DIR)#g" $$file > $(XDG_AUTOSTART_DIR)/$$file; \
+-		chmod 0644 $(XDG_AUTOSTART_DIR)/$$file; \
++		sed -e "s#@SHARE_DIR@#$(SHARE_DIR)#g" $$file > $(DESTDIR)$(XDG_AUTOSTART_DIR)/$$file; \
++		chmod 0644 $(DESTDIR)$(XDG_AUTOSTART_DIR)/$$file; \
+ 	done
+-	mkdir -p $(DOC_DIR)/easy-union
+ 	for file in $(DOC); do \
+-		install -m 0644 $$file $(DOC_DIR)/easy-union/$$file; \
++		install -m 0644 $$file $(DESTDIR)$(DOC_DIR)/$$file; \
+ 	done
+ 	make i18n
+ 	for file in *.mo; do \
+-		install -m 0644 $$file $(LOCALE_DIR)/`echo $$file | cut -d . -f 1`/LC_MESSAGES/easy-union.mo; \
++		install -m 0644 -D $$file $(DESTDIR)$(LOCALE_DIR)/`echo $$file | cut -d . -f 1`/LC_MESSAGES/easy-union.mo; \
+ 	done
+-	make clean
+ 
+ uninstall:
+ 	rm -rf $(SHARE_DIR)/easy-union
